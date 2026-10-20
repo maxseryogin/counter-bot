@@ -17,6 +17,9 @@ export class Store {
     this.db.prepare('INSERT INTO kv VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value=excluded.value')
       .run(key, JSON.stringify(value));
   }
+  delete(key) {
+    this.db.prepare('DELETE FROM kv WHERE key = ?').run(key);
+  }
   transaction(fn) {
     this.db.exec('BEGIN IMMEDIATE');
     try { const value = fn(); this.db.exec('COMMIT'); return value; }
